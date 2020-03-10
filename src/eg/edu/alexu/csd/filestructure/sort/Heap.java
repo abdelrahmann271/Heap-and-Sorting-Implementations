@@ -1,5 +1,6 @@
 package eg.edu.alexu.csd.filestructure.sort;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
@@ -8,6 +9,7 @@ import java.util.Vector;
 public class Heap<T extends Comparable<T>> implements IHeap<T> {
 	
 	public Node [] heap = null;
+	
 	private int ActualSize ;		//acutalsize = indx of last element = el 3dd N
 									//heap size N+1	
 	@Override
@@ -116,6 +118,7 @@ public class Heap<T extends Comparable<T>> implements IHeap<T> {
 		{
 			unordered.add(temp[i].getValue());
 		}
+		
 	}
 	private void swapNodes(INode<T> node1,INode<T> node2)
 	{
@@ -123,4 +126,40 @@ public class Heap<T extends Comparable<T>> implements IHeap<T> {
 		node1.setValue(node2.getValue());
 		node2.setValue(temp);	
 	}	
+	
+	public void construct(ArrayList unordered) {
+		
+		int sizeArr = unordered.size()+1;
+		Node<T>[] temp = new Node[sizeArr];
+		Iterator itr = unordered.iterator();
+		int k = 1;
+		int size = unordered.size();
+		this.ActualSize=size;
+		
+		while(itr.hasNext())
+		{
+			Node<T> n = new Node<T>();
+			n.setValue((T) itr.next());
+			temp[k] = n ;
+			k++;
+		}
+
+		for(int i = 1 ; i <= size ; i++)
+		{	
+			if(2*i <= size )
+			{
+				temp[i].setLeftChild(temp[2*i]);
+			}
+			if( 2*i + 1 <= size)
+			{
+				temp[i].setRightChild(temp[2*i+1]);
+			}
+			if( i!=1)
+			{
+				temp[i].setParent(temp[i/2]);
+			}
+		}
+		heap = temp;
+	}
 }
+
