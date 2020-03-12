@@ -23,7 +23,7 @@ public class Node<T extends Comparable<T>> implements INode<T>  {
 	@Override
 	public INode<T> getParent() {
 		// TODO Auto-generated method stub
-		return null;
+		return parent;
 	}
 
 	@Override

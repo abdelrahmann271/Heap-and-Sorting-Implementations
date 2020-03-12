@@ -2,14 +2,15 @@ package eg.edu.alexu.csd.filestructure.sort;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Vector;
 
 
 public class Heap<T extends Comparable<T>> implements IHeap<T> {
 	
-	public Node [] heap = null;
-	private int ActualSize ;		//acutalsize = indx of last element = el 3dd N
-									//heap size N+1	
+	//Actual size = index of last element = N
+	//heap size initial capacity = 101
+	public Node<T>[] heap= new Node[1000001];
+	private int ActualSize = 0 ;	 
+									
 	@Override
 	public INode<T> getRoot() {
 		// TODO Auto-generated method stub
@@ -25,6 +26,8 @@ public class Heap<T extends Comparable<T>> implements IHeap<T> {
 	@Override
 	public void heapify(INode<T> node) {
 		// TODO Auto-generated method stub
+		if(node == null)
+			return;
 		INode<T> largest = node;
 		if(node.getLeftChild() != null && node.getValue().compareTo(node.getLeftChild().getValue()) > 0 )
 		{
@@ -40,7 +43,7 @@ public class Heap<T extends Comparable<T>> implements IHeap<T> {
 		}
 		if(largest != node)
 		{
-			swapNodes(node, largest); //swap the values only, not pointers 
+			swapNodes(node, largest); //Swap the values only, not pointers 
 			heapify(largest);
 		}
 		
@@ -49,14 +52,15 @@ public class Heap<T extends Comparable<T>> implements IHeap<T> {
 	@Override
 	public T extract() {
 		// TODO Auto-generated method stub
+		if(ActualSize ==0)
+			return null;
 		T extractedValue;
 		swapNodes(this.heap[ActualSize] , this.heap[1]);			
-		//How to return the updated heap ?
-		if(heap[ActualSize/2].getRightChild() == null)
+		if(ActualSize != 1 && heap[ActualSize/2].getRightChild() == null)
 		{
 			heap[ActualSize/2].setLeftChild(null);
 		}
-		else
+		else if (ActualSize != 1 )
 		{
 			heap[ActualSize/2].setRightChild(null);
 		}
@@ -69,15 +73,44 @@ public class Heap<T extends Comparable<T>> implements IHeap<T> {
 
 	@Override
 	public void insert(T element) {
+		if(element ==null)
+			return;
 		// TODO Auto-generated method stub
-		
+		Node<T> newElement = new Node<>();
+		newElement.setValue(element);
+		if(ActualSize + 1 >= heap.length)
+		{
+			Node<T>[] temp= new Node[heap.length*2];
+			for(int i = 1 ; i < heap.length ; i++)
+			{
+				temp[i] = heap[i];
+			}
+			heap = temp;	
+		}
+		ActualSize++;
+		heap[ActualSize] = newElement;
+		heap[ActualSize].setParent(heap[ActualSize/2]);
+		if ( ActualSize != 1 &&  heap[ActualSize/2].getLeftChild() != null ) {
+			heap[ActualSize/2].setRightChild(heap[ActualSize]);
+			heap[ActualSize].setParent(heap[ActualSize/2]);
+		}
+		else if( ActualSize != 1 )
+		{
+			heap[ActualSize/2].setLeftChild(heap[ActualSize]);
+			heap[ActualSize].setParent(heap[ActualSize/2]);
+		}
+		int hcounter = ActualSize;
+		while(hcounter != 1 && heap[hcounter].getValue().compareTo(heap[hcounter/2].getValue()) > 0) {
+			swapNodes(heap[hcounter], heap[hcounter/2]);
+			hcounter = hcounter/2;
+		}
 	}
 
 	@Override
 	public void build(Collection<T> unordered) {
 		// TODO Auto-generated method stub	
-		int sizeArr = unordered.size()+1;
-		Node<T>[] temp = new Node[sizeArr];
+		if(unordered == null)
+			return;
 		Iterator itr = unordered.iterator();
 		int k = 1;
 		int size = unordered.size();
@@ -87,7 +120,7 @@ public class Heap<T extends Comparable<T>> implements IHeap<T> {
 		{
 			Node<T> n = new Node<T>();
 			n.setValue((T) itr.next());
-			temp[k] = n ;
+			heap[k] = n ;
 			k++;
 		}
 
@@ -95,26 +128,26 @@ public class Heap<T extends Comparable<T>> implements IHeap<T> {
 		{	
 			if(2*i <= size )
 			{
-				temp[i].setLeftChild(temp[2*i]);
+				heap[i].setLeftChild(heap[2*i]);
 			}
 			if( 2*i + 1 <= size)
 			{
-				temp[i].setRightChild(temp[2*i+1]);
+				heap[i].setRightChild(heap[2*i+1]);
 			}
 			if( i!=1)
 			{
-				temp[i].setParent(temp[i/2]);
+				heap[i].setParent(heap[i/2]);
 			}
 		}
-		heap = temp;	
+		//heap = heap;	
 		for(int j = size/2 ; j>=1 ;j--)
 		{
-			heapify(temp[j]);
+			heapify(heap[j]);
 		}
 		unordered.clear();
-		for(int i = 1 ; i < temp.length ; i++)
+		for(int i = 1 ; i < size+1 ; i++)
 		{
-			unordered.add(temp[i].getValue());
+			unordered.add(heap[i].getValue());
 		}
 	}
 	private void swapNodes(INode<T> node1,INode<T> node2)
