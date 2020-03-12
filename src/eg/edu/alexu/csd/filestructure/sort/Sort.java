@@ -8,8 +8,10 @@ public class Sort<T extends Comparable<T>> implements ISort<T> {
 		@Override
 		public IHeap heapSort(ArrayList unordered) {
 			// TODO Auto-generated method stub
-			list=unordered;
 			Heap<T> h = new Heap<>();
+			if(unordered == null)
+				return h;
+			list=unordered;			
 		    h.build(list);
 		    int n=list.size();
 		    for(int i=n-1;i>0;i--) {
@@ -25,6 +27,8 @@ public class Sort<T extends Comparable<T>> implements ISort<T> {
 		@Override
 		public void sortFast(ArrayList unordered) {
 			// TODO Auto-generated method stub
+			if(unordered ==null)
+				return;
 			list=unordered;
 			part(0,unordered.size()-1);
 			
@@ -32,7 +36,8 @@ public class Sort<T extends Comparable<T>> implements ISort<T> {
 
 		@Override
 		public void sortSlow(ArrayList unordered) {
-
+			if(unordered == null)
+				return;
 			int n=unordered.size();
 			for(int i=0;i<n;i++) {
 				for(int j=0;j<n-1-i;j++) {
