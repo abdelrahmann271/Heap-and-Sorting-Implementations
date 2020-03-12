@@ -10,8 +10,10 @@ public class Sort<T extends Comparable<T>> implements ISort<T> {
 			// TODO Auto-generated method stub
 			list=unordered;
 			Heap<T> h = new Heap<>();
-		    h.build(list);
 		    int n=list.size();
+		    for(int i=(n-1)/2;i>=0;i--) {
+		    	heapify(i,n);
+		    }
 		    for(int i=n-1;i>0;i--) {
 		    	Object temp=list.get(0);
 		    	list.set(0, list.get(i));
@@ -26,7 +28,7 @@ public class Sort<T extends Comparable<T>> implements ISort<T> {
 		public void sortFast(ArrayList unordered) {
 			// TODO Auto-generated method stub
 			list=unordered;
-			part(0,unordered.size()-1);
+			 div(0,unordered.size()-1);
 			
 		}
 
@@ -47,41 +49,36 @@ public class Sort<T extends Comparable<T>> implements ISort<T> {
 			}
 			
 		}
-		public void part(int l,int r) {
-			if(l<r) {
-				part(l,(l+r)/2);
-				part((l+r)/2+1,r);
-				mergesort(l,r);
+
+		public void div(int l,int r) {
+			
+			if(l<r) 
+			{
+			int p=Quicksort(l,r);
+			div(l,p-1);
+			div(p+1,r);
 			}
-			
-			
 		}
-	    public void mergesort(int l,int r)	{
+	
+	    public int Quicksort(int l,int r) {
 	    	
-	    	int mid=(l+r)/2+1,i=l,j=mid;
-	    	Vector<Object> temp=new Vector();
-	    	while(i<mid&&j<=r) {
+	    	int last=l,it=l+1;
+	    	Comparable<T> x=(Comparable<T>)list.get(l);
+	    	while(it<=r) {
 	    		
-	    		Comparable<T> x=(Comparable<T>)list.get(i);
-				Comparable<T> y=(Comparable<T>)list.get(j);
-				if(x.compareTo((T)y)<0) {
-					temp.add(list.get(i++));
-				}
-				else {
-					temp.add(list.get(j++));
-				}
-	    		
+	    		Comparable<T> y=(Comparable<T>)list.get(it);
+	    		if(x.compareTo((T)y)>=0) {
+	    			last++;
+	    			Object temp=list.get(last);
+	    			list.set(last, list.get(it));
+	    			list.set(it,temp);
+	    		}
+	    		it++;
 	    	}
-	    	while(i<mid) {
-	    		temp.add(list.get(i++));
-	    	}
-	    	while(j<=r) {
-	    		temp.add(list.get(j++));
-	    	}
-	    	j=0;
-	    	for(i=l;i<=r;i++) {
-	    		list.set(i, temp.get(j++));
-	    	}
+	    	Object temp=list.get(last);
+			list.set(last, list.get(l));
+			list.set(l,temp);
+	    	return last;
 	    	
 	    }
 	    public void heapify(int i,int n) {
@@ -103,6 +100,6 @@ public class Sort<T extends Comparable<T>> implements ISort<T> {
 	    		heapify(max,n);
 	    	}
 	    }
+	
 	    
 }
-

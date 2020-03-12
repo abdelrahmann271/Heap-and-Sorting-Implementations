@@ -1,6 +1,6 @@
 package eg.edu.alexu.csd.filestructure.sort;
 
-import java.util.Vector;
+import java.util.*;
 
 public class Test {
 	
@@ -10,13 +10,20 @@ public class Test {
 //		v.add(1);
 //		System.out.println(v.get(0));
 		
-		Vector<Integer> v = new Vector<Integer>();
+		ArrayList<Integer> v = new ArrayList<Integer>();
+		v.add(6);
 		v.add(5);
-		v.add(2);
 		v.add(3);
 		v.add(8);
+		v.add(2);
 		v.add(1);
-		v.add(6);
+		v.add(-4);
+		v.add(8);
+		v.add(3);
+		v.add(-42);
+		v.add(0);
+		v.add(21);
+	
 		for(int i = 0 ; i < v.size() ; i++)
 		{
 			System.out.print(v.get(i)+" ");
